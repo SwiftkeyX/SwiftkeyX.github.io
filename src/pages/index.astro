@@ -1,0 +1,81 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import MediaTile from '../components/MediaTile.astro';
+import { site } from '../site';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const base = import.meta.env.BASE_URL;
+---
+
+<Base>
+  <section class="hero">
+    <div class="status">Open to junior gameplay programmer roles</div>
+    <h1>Pasit<br />Pisanucaraleadkul</h1>
+    <p class="role">Gameplay Programmer <span>· Unity / C# · combat &amp; data-driven systems</span></p>
+    <p class="lede">
+      Computer Engineering graduate, Kasetsart University (2026). I build the systems under the game:
+      skill pipelines, enemy AI, hitboxes, and the module structure that keeps them maintainable.
+    </p>
+    <div class="btn-row">
+      <a class="btn primary" href="#projects">See projects</a>
+      <a class="btn" href={site.resume}>Download résumé</a>
+      <a class="btn" href={`mailto:${site.email}`}>Email me</a>
+    </div>
+  </section>
+
+  <h2 class="section-title" id="projects">Projects</h2>
+  <div class="cards">
+    {
+      projects.map((p) => (
+        <a class="card" href={`${base}projects/${p.id}/`}>
+          <MediaTile title={p.data.title} accent={p.data.accent} clip={p.data.clip} poster={p.data.poster} />
+          <div>
+            <p class="kind">{p.data.kind}</p>
+            <h3>{p.data.title}</h3>
+            <p class="tag">{p.data.tagline}</p>
+            <ul>
+              {p.data.highlights.slice(0, 3).map((h) => (
+                <li>{h}</li>
+              ))}
+            </ul>
+            <span class="more">Breakdown + playable build →</span>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+
+  <h2 class="section-title" id="experience">Experience</h2>
+  <div class="entry">
+    <h3>Software Developer (Intern) — Office of Computer Service, Kasetsart University</h3>
+    <span class="when">Apr 2025 – May 2025</span>
+    <p>
+      Built the office's staff training &amp; activity record system in a two-developer team, replacing a legacy
+      application. Deployed to production during the internship and still in service.
+    </p>
+    <ul>
+      <li>Auth against the university's central login (ku-all-login), issuing signed JWT sessions with admin / staff roles.</li>
+      <li>Two-tier document permissions: activity files for every attendee, per-person files (certificates) for their owner only.</li>
+      <li>10-table PostgreSQL schema via Prisma ORM; filterable record table with Excel export.</li>
+    </ul>
+  </div>
+
+  <h2 class="section-title">Skills</h2>
+  <dl class="skills">
+    <dt>Game / Unity</dt>
+    <dd>Unity 6 · C# · UI Toolkit · ScriptableObjects · Assembly definitions · State machines · Behaviour trees · A* pathfinding · Animation events</dd>
+    <dt>Languages</dt>
+    <dd>C# · TypeScript · JavaScript · Python · SQL · C · C++</dd>
+    <dt>Backend &amp; Web</dt>
+    <dd>NestJS · Next.js · React · Prisma ORM · PostgreSQL · JWT auth · REST · SSE</dd>
+    <dt>Tools</dt>
+    <dd>Git · GitHub</dd>
+  </dl>
+
+  <h2 class="section-title">Education</h2>
+  <div class="entry">
+    <h3>Kasetsart University — B.Eng. Computer Engineering</h3>
+    <span class="when">2022 – 2026</span>
+  </div>
+</Base>

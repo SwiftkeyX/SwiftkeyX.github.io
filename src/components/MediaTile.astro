@@ -1,0 +1,26 @@
+---
+// Shows the gameplay clip when one exists, else a poster, else a colored title tile.
+// Drop files into /public/media and set `clip` / `poster` in the project's frontmatter.
+interface Props {
+  title: string;
+  accent: string;
+  clip?: string;
+  poster?: string;
+  label?: boolean;
+}
+const { title, accent, clip, poster, label = true } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const url = (p?: string) => (p ? `${base}${p}` : undefined);
+const placeholder = !clip && !poster;
+---
+
+<div class:list={['media-tile', { placeholder }]} style={`--tile:${accent}`}>
+  {
+    clip ? (
+      <video src={url(clip)} poster={url(poster)} autoplay muted loop playsinline preload="metadata" aria-label={`${title} gameplay clip`} />
+    ) : poster ? (
+      <img src={url(poster)} alt={`${title} screenshot`} loading="lazy" />
+    ) : null
+  }
+  {placeholder && label && <span class="tile-label">{title}</span>}
+</div>

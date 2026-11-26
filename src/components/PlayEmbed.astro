@@ -1,0 +1,37 @@
+---
+// itch.io HTML5 build, loaded only on click so the page stays fast.
+interface Props {
+  uploadId: string;
+  itch: string;
+  title: string;
+}
+const { uploadId, itch, title } = Astro.props;
+const src = `https://itch.io/embed-upload/${uploadId}?color=1b1a18`;
+---
+
+<section class="play" aria-label="Play in browser">
+  <div class="play-frame" data-src={src} data-title={title}>
+    <div>
+      <button type="button" class="play-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"></path></svg>
+        Play in browser
+      </button>
+      <p class="hint">Runs the WebGL build from itch.io. Desktop + keyboard/mouse recommended.</p>
+    </div>
+  </div>
+  <p class="media-note">Can't load it? <a href={itch}>Open on itch.io</a>.</p>
+</section>
+
+<script is:inline>
+  document.querySelectorAll('.play-frame').forEach((frame) => {
+    frame.querySelector('.play-btn')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = frame.dataset.src;
+      iframe.title = frame.dataset.title + ' (playable build)';
+      iframe.allow = 'autoplay; fullscreen *; gamepad';
+      iframe.allowFullscreen = true;
+      frame.replaceChildren(iframe);
+      iframe.focus();
+    });
+  });
+</script>
