@@ -1,0 +1,22 @@
+---
+// The interface review tables for Magic School 3's assembly definitions, kept off the main project page.
+import Base from '../../../layouts/Base.astro';
+import { Content } from '../../../extra/ms3-interfaces.md';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Base title="Magic School 3 · 23 interfaces reviewed" description="Which of Magic School 3's 23 interfaces are justified by the assembly split and which are not.">
+  <a class="back" href={`${base}projects/magic-school-3/`}>← Magic School 3</a>
+
+  <section class="proj-hero">
+    <p class="kind">Magic School 3 · Assembly definitions</p>
+    <h1>From 23 interfaces: which ones are good and which are bad</h1>
+  </section>
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  <p><a href={`${base}projects/magic-school-3/#assembly-definitions`}>← Back to Magic School 3</a></p>
+</Base>

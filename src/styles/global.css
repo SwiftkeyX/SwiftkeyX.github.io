@@ -226,6 +226,7 @@ img, video, svg { max-width: 100%; height: auto; display: block; }
 .prose .takeaway { margin: 18px 0 8px; padding: 12px 18px; border-left: 3px solid var(--rule); background: var(--surface); border-radius: 0 10px 10px 0; }
 .prose .takeaway p { margin: 4px 0; }
 .prose ol { padding-left: 22px; }
+.prose .problem-list li { margin: 8px 0; }
 .prose .soft { color: var(--ink-soft); font-style: italic; }
 .prose .toc { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 8px 0 24px; }
 .prose .toc li { margin: 0; }
