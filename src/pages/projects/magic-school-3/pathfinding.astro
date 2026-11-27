@@ -1,0 +1,22 @@
+---
+// The full A* pathfinding write-up for Magic School 3, kept off the main project page.
+import Base from '../../../layouts/Base.astro';
+import { Content } from '../../../extra/ms3-pathfinding.md';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Base title="Magic School 3 · A* pathfinding" description="How a hero moves across the hex board in Magic School 3: pick a target, ask A* for one step, decide whether to take it, then reserve and walk.">
+  <a class="back" href={`${base}projects/magic-school-3/`}>← Magic School 3</a>
+
+  <section class="proj-hero">
+    <p class="kind">Magic School 3 · Hex movement</p>
+    <h1>A* pathfinding</h1>
+  </section>
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  <p><a href={`${base}projects/magic-school-3/#hex-movement`}>← Back to Magic School 3</a></p>
+</Base>

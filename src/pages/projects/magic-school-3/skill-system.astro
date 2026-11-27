@@ -1,0 +1,22 @@
+---
+// The full "How a skill is put together" walkthrough for Magic School 3, kept off the main project page.
+import Base from '../../../layouts/Base.astro';
+import { Content } from '../../../extra/ms3-skill-system.md';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Base title="Magic School 3 · How a skill is put together" description="Magic School 3's skill system, followed through one hero's skill: steps, triggers, action groups and the context passed between them.">
+  <a class="back" href={`${base}projects/magic-school-3/`}>← Magic School 3</a>
+
+  <section class="proj-hero">
+    <p class="kind">Magic School 3 · Skill system</p>
+    <h1>How a skill is put together</h1>
+  </section>
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  <p><a href={`${base}projects/magic-school-3/#how-a-skill-is-put-together`}>← Back to Magic School 3</a></p>
+</Base>
