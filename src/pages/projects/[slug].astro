@@ -2,7 +2,6 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import MediaTile from '../../components/MediaTile.astro';
-import PlayEmbed from '../../components/PlayEmbed.astro';
 
 export async function getStaticPaths() {
   const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
@@ -26,15 +25,13 @@ const base = import.meta.env.BASE_URL;
     <h1>{d.title}</h1>
     <p class="tag">{d.tagline}</p>
     <div class="btn-row">
-      <a class="btn primary" href="#play">▶ Play</a>
-      <a class="btn" href={d.github}>Source on GitHub</a>
-      <a class="btn" href={d.itch}>itch.io page</a>
+      <a class="btn primary" href={d.github}>Source on GitHub</a>
+      {d.itch && <a class="btn" href={d.itch}>itch.io page</a>}
     </div>
   </section>
 
   <div class="media-main">
     <MediaTile title={d.title} accent={d.accent} clip={d.clip} poster={d.poster} />
-    {!d.clip && <p class="media-note">Gameplay clip coming soon — try the playable build below.</p>}
   </div>
 
   <aside class="tldr">
@@ -50,11 +47,6 @@ const base = import.meta.env.BASE_URL;
   <article class="prose">
     <Content />
   </article>
-
-  <div id="play">
-    <h2 class="section-title">Play it</h2>
-    <PlayEmbed uploadId={d.itchUploadId} itch={d.itch} title={d.title} />
-  </div>
 
   <p><a href={`${base}projects/${next.id}/`}>Next project: {next.data.title} →</a></p>
 </Base>

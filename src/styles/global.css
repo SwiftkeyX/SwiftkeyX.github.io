@@ -135,6 +135,7 @@ img, video, svg { max-width: 100%; height: auto; display: block; }
 .card:hover { transform: translateY(-2px); border-color: var(--ink-soft); text-decoration: none; }
 .card h3 { font-family: var(--sans); font-weight: 800; font-size: 20px; margin: 2px 0 4px; letter-spacing: 0.01em; text-transform: uppercase; }
 .card .kind { font-size: 13px; color: var(--ink-soft); margin: 0 0 8px; }
+.badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--play); border-radius: 4px; padding: 1px 6px; margin-right: 8px; vertical-align: 1px; }
 .card p.tag { margin: 0 0 10px; }
 .card ul { margin: 0 0 12px; padding-left: 18px; font-size: 15px; }
 .card ul li { margin: 2px 0; }
@@ -212,6 +213,25 @@ img, video, svg { max-width: 100%; height: auto; display: block; }
 .prose pre code { background: none; border: 0; padding: 0; font-size: inherit; }
 .prose figure { margin: 24px 0; }
 .prose figcaption { font-size: 14px; color: var(--ink-soft); margin-top: 8px; }
+.prose h4 { font-size: 16.5px; margin: 30px 0 8px; }
+.prose h4 code { font-size: 0.92em; }
+.prose h3 + h4 { margin-top: 12px; }
+.prose .eg { margin: 10px 0 16px; padding: 2px 0 2px 14px; border-left: 3px solid var(--line); color: var(--ink-soft); font-style: italic; }
+.prose .eg p { margin: 6px 0; }
+.prose .example { margin: 14px 0 22px; padding: 4px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.prose .example ul { list-style: none; padding-left: 0; }
+.prose .example li { margin: 6px 0; padding-left: 0; }
+.prose .label { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-top: 10px; }
+.prose .label code { font-size: 14px; letter-spacing: 0; text-transform: none; color: var(--ink); }
+.prose .takeaway { margin: 18px 0 8px; padding: 12px 18px; border-left: 3px solid var(--rule); background: var(--surface); border-radius: 0 10px 10px 0; }
+.prose .takeaway p { margin: 4px 0; }
+.prose ol { padding-left: 22px; }
+.prose .soft { color: var(--ink-soft); font-style: italic; }
+.prose .toc { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 8px 0 24px; }
+.prose .toc li { margin: 0; }
+.prose .toc a { display: inline-block; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); text-decoration: none; font-size: 14.5px; }
+.prose .source { display: block; margin: 4px 0 8px; font-size: 14px; color: var(--ink-soft); }
+.prose ol li::marker { font-weight: 700; }
 .prose blockquote { margin: 18px 0; padding: 2px 18px; border-left: 3px solid var(--line); color: var(--ink-soft); }
 
 /* Shiki dual theme */
@@ -235,7 +255,26 @@ img, video, svg { max-width: 100%; height: auto; display: block; }
 .diagram .arrow { fill: var(--ink-soft); }
 .diagram .arrow.hl { fill: var(--play); }
 .diagram .band { fill: var(--bg); stroke: var(--line); }
+.diagram .hex { fill: var(--bg); stroke: var(--line); stroke-width: 1.4; }
+.diagram .hex.green { fill: rgba(58, 157, 93, 0.28); stroke: #3a9d5d; stroke-width: 2; }
+.diagram .hex.orange { fill: rgba(224, 138, 40, 0.28); stroke: #e08a28; stroke-width: 2; }
+.diagram .hex.hero { fill: var(--surface); stroke: var(--ink); stroke-width: 2.2; }
+.diagram .ht { fill: var(--ink); font-size: 12px; font-weight: 700; text-anchor: middle; }
 .diagram .bandlabel { fill: var(--ink-soft); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* Comparison table */
+.prose table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 18px 0; display: block; overflow-x: auto; }
+.prose th, .prose td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+.prose th { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+.prose td:first-child { font-weight: 600; white-space: nowrap; }
+.prose table.iface { font-size: 14px; line-height: 1.5; }
+.prose table.iface td { min-width: 100px; }
+.prose table.iface td:last-child { min-width: 260px; width: 50%; }
+.prose table.iface td:first-child { font-weight: 400; }
+.prose .ok { font-weight: 700; color: #2f7a3e; }
+.prose .bad { font-weight: 700; color: var(--play); }
+:root[data-theme='dark'] .prose .ok { color: #7fd08f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) .prose .ok { color: #7fd08f; } }
 
 /* ---------- Footer ---------- */
 .site-footer { margin-top: 72px; padding: 28px 0 48px; border-top: 1px solid var(--line); font-size: 15px; color: var(--ink-soft); }

@@ -150,15 +150,3 @@ Responsiveness matters most in this genre, so I timestamped the input and the mo
 actually responded, for attack, movement and roll, and logged each sample to CSV.
 
 <!-- REVIEW (Pasit): add your measured numbers here, e.g. "attack: ~XX ms, roll: ~XX ms", and what you changed because of them. Real numbers make this section. -->
-
-## What I'd do differently
-
-<!-- REVIEW (Pasit): found on a re-read of the code. Keep the ones you agree with. -->
-
-- **Event unsubscription bug.** `Root.Unsubscribe()` removes *new* lambdas, not the ones it added, so
-  it doesn't actually unsubscribe. I'd keep the handlers as named methods.
-- **Copy-paste bug in setup.** The retreat FSMs are built by looping over `Range.Count` instead of
-  `Retreat.Count`. A data-driven setup with one loop per list would remove this kind of slip.
-- **Tree built in code.** The tree is wired by hand in `Brain.cs`, with debug nodes inline. For a
-  second boss I'd move the tree into data, or at least into a builder, so the structure can be read
-  separately from the plumbing.

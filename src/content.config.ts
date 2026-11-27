@@ -11,12 +11,13 @@ const projects = defineCollection({
     tagline: z.string(),         // one line for the card + page hero
     tech: z.array(z.string()),
     highlights: z.array(z.string()).max(4),
-    itch: z.string().url(),
+    itch: z.string().url().optional(),   // omit when there's no public build yet
     github: z.string().url(),
-    itchUploadId: z.string(),    // id from itch's HTML5 build, used for the click-to-play embed
+    itchUploadId: z.string().optional(), // id from itch's HTML5 build, used for the click-to-play embed
     clip: z.string().optional(),   // /media/xxx.mp4 — drop in once recorded
     poster: z.string().optional(), // /media/xxx.jpg
     accent: z.string(),
+    badge: z.string().optional(),  // small label on the card, e.g. "Latest"
   }),
 });
 

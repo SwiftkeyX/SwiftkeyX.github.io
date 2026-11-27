@@ -122,13 +122,3 @@ knowing their types.
 `GameClock` advances Morning → Afternoon → Evening and rolls over to a new day and weekday. It raises
 `PeriodChanged` and `DayChanged` events, so the HUD clock and the new-day banner listen for changes
 instead of polling.
-
-## What I'd do differently
-
-<!-- REVIEW (Pasit): your call. These are suggestions. -->
-
-- **UI depends on 8 modules.** It's the top layer, so that's allowed, but the panels reach into
-  gameplay types directly. With more time I'd put a thin view-model or events layer between them.
-- **Characters → Crafting / Farming.** The player references these feature modules directly for its
-  tools. Routing tool use through an interface (as `IItemCollector` does) would make Characters fully
-  independent of features.
