@@ -324,3 +324,20 @@ body.code-only .prose .compare.single { grid-template-columns: 1fr; }
   body.code-only .prose .compare { height: auto; }
   body.code-only .prose .compare pre { max-height: 80vh; }
 }
+
+/* ---------- Hero GIF grid (MS4 skill showcase) ---------- */
+/* Breaks out of the text column like .compare: three clips per row. Click one to see it bigger (See skill-system.astro). */
+.prose .hero-grid { position: relative; left: 50%; transform: translateX(-50%); width: min(1080px, calc(100vw - 48px)); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 16px; margin: 18px 0 24px; }
+.prose .hero-cell p { margin: 0; font-size: 14px; line-height: 1.4; color: var(--ink-soft); }
+.prose .hero-cell p.hero-name { margin-bottom: 6px; font-size: 15px; color: var(--ink); overflow-wrap: anywhere; }
+.prose .hero-cell img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 6px; }
+@media (max-width: 900px) {
+  .prose .hero-grid { position: static; transform: none; width: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.prose .hero-cell img { cursor: zoom-in; }
+
+/* ---------- Lightbox: a clicked GIF shown big ---------- */
+.lightbox { border: 0; padding: 0; background: transparent; width: min(1280px, 94vw); max-width: 94vw; max-height: 94vh; overflow: hidden; }
+.lightbox::backdrop { background: rgba(0, 0, 0, 0.82); }
+.lightbox img { display: block; width: 100%; height: auto; max-height: 86vh; object-fit: contain; border-radius: 8px; cursor: zoom-out; }
+.lightbox p { margin: 8px 0 0; color: #eee; font-size: 15px; text-align: center; }

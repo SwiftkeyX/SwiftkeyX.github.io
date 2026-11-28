@@ -8,7 +8,7 @@ How a hero moves across the hex board during a fight: pick a target, ask A\* for
 <img class="shot" src="/media/ms3-path-0-target.png" alt="Hex board diagram: Mira picks Solace, one step away, over Enemy X, which looks closer in a straight line but is four steps away." loading="lazy">
 </figure>
 
-Each frame, an idle hero asks: **who's my nearest enemy?** Nearest is measured in **steps** (how many hexes it takes to walk there), not straight-line distance.
+Each frame, an idle hero asks: **who's my nearest enemy?** Nearest is measured in **steps** (how many hexes it takes to walk there), not straight-line distance. An enemy that is already **in attack range** is always picked before one that isn't.
 
 - If that enemy is already **in attack range**, the hero attacks and doesn't move.
 - Otherwise it goes to step 1.
