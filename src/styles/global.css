@@ -318,6 +318,7 @@ body.code-only .prose .label { margin: 0; }
 body.code-only .prose .compare pre { flex: 1; min-height: 0; max-height: none; margin: 0; font-size: 13px; }
 body.code-only .prose .compare pre, body.code-only .prose .compare pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
 body.code-only .prose .compare pre { overflow-x: hidden; overflow-y: auto; }
+body.code-only .prose .compare.single { grid-template-columns: 1fr; }
 @media (max-width: 900px) {
   body.code-only { height: auto; overflow: auto; }
   body.code-only .prose .compare { height: auto; }

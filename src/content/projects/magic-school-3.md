@@ -17,7 +17,7 @@ accent: "#3c4a8a"
 ---
 
 > **Rebuilt as Magic School 4.** I rebuilt this game's skill system to fix its problems.
-> [See what changed and why ↓](#magic-school-4-the-rebuild)
+> [See what changed and why ↓](#problems-and-fixes)
 
 ## Background
 
@@ -38,58 +38,56 @@ The steps never reference each other. They are linked only by their **order in t
 
 <a class="btn" href="/projects/magic-school-3/skill-system/">How a skill is put together, step by step →</a>
 
-### The problem
+## Problems and fixes
 
-<ol class="problem-list">
-<li><code>SkillDefinition</code> have bad structure. Causing a new ugly helper class to born everytime we want to add new hero that break the template.</li>
-<li>The order of the skill depend on array position but nothing enforce it properly</li>
-<li>Beside no enforcement, the skill trigger order was too complicated in code</li>
-</ol>
+This design worked, but it had three problems. I rebuilt the skill system in Magic School 4 to fix them. Each problem below is followed straight away by its fix.
 
-<a class="btn" href="/projects/magic-school-3/problem/">Read the whole problem →</a>
+### 1. A skill could not remember anything
 
-## Magic School 4: the rebuild
+**Problem.** A skill was a static `Build()` method. It ran once to produce a list of steps, so it could not store anything between casts. A hero that needed to remember something got its own helper class. For example, Vharn's attack combo was counted in `ComboTracker.cs`, wired into `SkillDefinition` through a callback. Each new hero like that meant another helper class.
 
-Magic School 4 keeps Magic School 3’s idea: a skill is built from small reusable parts. What changed is
-how those parts are held together. [Magic School 3](#the-problem) ended with three problems
-in its skill system, and Magic School 4 answers each one.
+**Fix.** In Magic School 4, each skill is a class that inherits from `SkillDefinition`. Anything it needs to remember is just a field. `ComboTracker.cs` is gone: Dire Wolf counts its attacks in an `_attackCount` field, updated in `OnAutoAttack`.
 
-| Topic | Magic School 3 | Magic School 4 |
-| --- | --- | --- |
-| 1. Skill class now is more extensible. | A skill is a static builder that runs once. A hero that needs its own state needs a new helper class. | Each skill is its own class that can hold its own field and can run mid battle. Technically, it inherit from the `SkillDefinition`. |
-| 2. Order of the skill is easier to understand. | Set by position in a list. Nothing checks or enforce it. | Now it was a virtual method in `SkillDefinition` that each skill inherit from it can override. e.g. `onStart`, `onHit`, `onExpired`. |
-
-### 1. A skill is no longer static and can run mid-battle
-
-Magic School 3’s skills were static, so it couldn’t keep its own field and skill is only run once in Build() so it never run mid-battle.
-
-In Magic School 4 the skill is an object, so the counter is just a field. e.g. Dwarf’s blast grows every cast: 1 hex, then 2, then 3, then back to 1. That needs a counter that lives between casts and a skill that rebuild itself mid-battle.
+Lumen is the same skill in both games:
 
 <a class="btn" href="/projects/magic-school-3/code/skill/">Code: <code>LumenSkill.cs</code>, MS3 vs MS4 →</a>
 
-This example is the job `ComboTracker.cs` did for Vharn in Magic School 3, through a callback wired into `SkillDefinition`. In Magic School 4 that class is gone, Dwarf counts casts directly in its own skill class via a `_attackCount` field and an `OnAutoAttack` override.
+Dwarf is Lumen with one addition: the blast grows every cast, from 1 hex to 2 to 3, then back to 1. That takes one field, `_blastHexes`, and an `OnCast` override that resizes the blast before firing. Nothing outside `DwarfSkill.cs` had to change.
 
-`Rider` is general enough to be put in shared code but is no longer in `templateAction`. It was move to `AOE`  which is the only one that use `Rider` .
+<a class="btn" href="/projects/magic-school-3/code/dwarf-skill/">Code: MS4 <code>LumenSkill.cs</code> vs <code>DwarfSkill.cs</code> →</a>
 
-### 2. The skill system is scraped
+### 2. Skill order depended on position in a list
 
-The problem come `HeroSkill` are rework because we don’t need the skill order tie to the array.
+**Problem.** `HeroSkill` found each step by its index in the list: the cast step had to be index 0, and the step that starts with it had to be index 1. Nothing checked this. A step in the wrong slot simply never fired.
 
-Now, the every skill are inherit from `SkillDefinition` and can override a hook to control the skill order: `OnCast`, `OnAutoAttack`, `OnCombatStart`, `OnHeroDied`,`OnDeath`, `OnHeroBurned` and `OnMarkedAllyDealtDamage`. For example, Troll gains health whenever an enemy dies, and that is one `OnHeroDied` override in `TrollSkill.cs`.
+**Fix.** In Magic School 4, order is spelled out in two places:
 
-The skill system is deeply coupling in itself so when `HeroSkill` and `SkillDefinition`changed, we have to scrape the entire system.
+- **When a skill runs.** `SkillDefinition` has one method per trigger: `OnCast`, `OnAutoAttack`, `OnCombatStart`, `OnHeroDied`, `OnDeath`, `OnHeroBurned` and `OnMarkedAllyDealtDamage`. A skill overrides only the ones it needs. Troll gains health whenever an enemy dies, and that is one `OnHeroDied` override in [`TrollSkill.cs`](/projects/magic-school-3/code/troll-skill/).
+- **What happens within a cast.** A `SkillFlow` names its parts by role: `onStart`, then `onHit` or `onExpired`. Lumen is `Flow(onStart: Shoot, onHit: Explode)`.
 
-- `HeroSkill` are rework because we don’t need the skill order tie to the array. Now it just a class with public method for the hero to called which is easier to understand.
-- Once `TriggerEnum` is gone the old class have to be rework too. So we use this chance to rename the class too so it’s easier to understand more intuitively.
-  - `SkillFlow` replace `SkillStep`
-  - `SkillPart` replace `SkillActionGroup`
-- This is the reference chain of how it use to look like:
-  - MS4: `HeroSkill (rework)` ⇒ `SkillDefenition` ⇒ `SkillFlow` ⇒ `SkillPart` ⇒ `source` / `templateAction` / `target`
-  - MS3: `HeroSkill` ⇒ `SkillDefinition` ⇒ `SkillStep` ⇒ `TriggerEnum` / `SkillActionGroup` ⇒ `source` / `templateAction` / `target`
+### 3. The trigger code was hard to follow
+
+**Problem.** Even when the order was right, following a skill meant tracing `HeroSkill` through index checks, `TriggerEnum` matches and callbacks built for the next step.
+
+**Fix.** `HeroSkill` now just calls the skill's methods. Its cast trigger went from a chain of index checks to a single call to `_skill.OnCast()`.
 
 <a class="btn" href="/projects/magic-school-3/code/hero-skill/">Code: <code>HeroSkill.cs</code>, MS3 vs MS4 →</a>
 
+The skill system is tightly coupled, so changing `HeroSkill` and `SkillDefinition` meant rewriting the classes under them. With `TriggerEnum` gone, I renamed those classes to say what they are:
+
+- `SkillStep` became `SkillFlow`.
+- `SkillActionGroup` became `SkillPart`.
+
+The chain, before and after:
+
+- **MS3:** `HeroSkill` → `SkillDefinition` → `SkillStep` → `TriggerEnum` / `SkillActionGroup` → `source` / `templateAction` / `target`
+- **MS4:** `HeroSkill` → `SkillDefinition` → `SkillFlow` → `SkillPart` → `source` / `templateAction` / `target`
+
 <a class="btn" href="/projects/magic-school-3/code/skill-definition/">Code: <code>SkillDefinition.cs</code>, MS3 vs MS4 →</a>
+
+One smaller cleanup: `Rider` (an action that rides on another action) used to sit in `TemplateAction`, the base class of every action. Only `AOE` uses it, so it moved into `AOE`.
+
+<a class="btn" href="/projects/magic-school-3/problem/">The full write-up of the Magic School 3 problems →</a>
 
 ## Hex movement
 
